@@ -7,6 +7,7 @@
   "dependencies": {
     "contentful": "^4.3.0",
     "contentful-management": "^3.4.0",
+    "contentful-wizard": "0.0.1-alpha-6",
     "nuxt": "^1.0.0-rc4",
     "vue-markdown": "^2.1.3"
   },

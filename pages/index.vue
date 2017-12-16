@@ -9,7 +9,7 @@
           <a href="/" class="person-name">{{ person.fields.name }}</a>
           <Navigation></Navigation>
         </div>
-        <div class="page-info wrapper">
+        <div class="page-info wrapper" data-value="profile">
           <h2>{{ person.fields.title }}</h2>
           <p>{{ person.fields.shortBio }}</p>
           <ul class="social-icons">
@@ -51,6 +51,7 @@
 import {createClient} from '~/plugins/contentful.js'
 import Navigation from '~/components/navigation.vue'
 import ArticlePreview from '~/components/article-preview.vue'
+import { attach } from 'contentful-wizard'
 
 const client = createClient()
 
@@ -65,11 +66,27 @@ export default {
         order: '-sys.createdAt'
       })
     ]).then(([entries, posts]) => {
+      // console.log(entries.items[0], this)
       return {
         person: entries.items[0],
         posts: posts.items
       }
     }).catch(console.error)
+  },
+  mounted: function () {
+    const node = this.$el.querySelector('[data-value="profile"]')
+
+    if (node) {
+      this.cleanup = attach({
+        node,
+        spaceId: this.person.sys.space.sys.id,
+        contentType: this.person.sys.contentType.sys.id,
+        entry: this.person.sys.id
+      })
+    }
+  },
+  destroyed: function () {
+    this.cleanup && this.cleanup()
   },
   components: {
     Navigation,

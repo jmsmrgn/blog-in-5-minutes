@@ -19,8 +19,20 @@
 </template>
 
 <script>
+import { attach } from 'contentful-wizard'
 export default {
-  props: ['post']
+  props: ['post'],
+  mounted: function () {
+    this.cleanup = attach({
+      node: this.$el,
+      spaceId: this.post.sys.space.sys.id,
+      contentType: this.post.sys.contentType.sys.id,
+      entry: this.post.sys.id
+    })
+  },
+  destroyed: function () {
+    this.cleanup && this.cleanup()
+  }
 }
 </script>
 
