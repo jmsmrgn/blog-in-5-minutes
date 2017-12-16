@@ -7,7 +7,7 @@
           <Navigation></Navigation>
         </div>
       </div>
-      <div>
+      <div data-value="asset">
         <img
           :src="post.fields.heroImage.fields.file.url + '?fit=scale&w=350&h=196'"
           :srcset="`${post.fields.heroImage.fields.file.url}?w=350&h=87&fit=fill 350w, ${post.fields.heroImage.fields.file.url}?w=1000&h=250&fit=fill 1000w, ${post.fields.heroImage.fields.file.url}?w=2000&h=500&fit=fill 2000w`"
@@ -17,7 +17,7 @@
       </div>
     </header>
 
-    <section class="body-container">
+    <section class="body-container" data-value="content">
       <main class="wrapper">
         <div class="headline">
           <time class="tiny">{{ ( new Date(post.fields.publishDate)).toDateString() }}</time>
@@ -36,6 +36,7 @@
 import VueMarkdown from 'vue-markdown'
 import {createClient} from '~/plugins/contentful.js'
 import Navigation from '~/components/navigation.vue'
+import {attach} from 'contentful-wizard'
 
 const client = createClient()
 
@@ -50,6 +51,32 @@ export default {
       }
     })
     .catch(console.error)
+  },
+  mounted: function () {
+    const assetNode = this.$el.querySelector('[data-value="asset"]')
+
+    if (assetNode) {
+      this.cleanupAsset = attach({
+        node: assetNode,
+        spaceId: this.post.fields.heroImage.sys.space.sys.id,
+        asset: this.post.fields.heroImage.sys.id
+      })
+    }
+
+    const contentNode = this.$el.querySelector('[data-value="content"]')
+
+    if (contentNode) {
+      this.cleanupContent = attach({
+        node: contentNode,
+        spaceId: this.post.sys.space.sys.id,
+        contentType: this.post.sys.contentType.sys.id,
+        entry: this.post.sys.id
+      })
+    }
+  },
+  destroyed: function () {
+    this.cleanupAsset && this.cleanupAsset()
+    this.cleanupContent && this.cleanupContent()
   },
   components: {
     Navigation,
