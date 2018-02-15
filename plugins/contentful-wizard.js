@@ -1,6 +1,6 @@
 const { init } = require('contentful-wizard')
 
 init({
-  key: 'CDA_KEY',
-  spaceId: 'SPACE_ID'
+  key: process.env.CTF_CDA_ACCESS_TOKEN,
+  spaceId: process.env.CTF_SPACE_ID
 })
