@@ -1,8 +1,11 @@
 <template>
   <nav role="navigation" class="top-nav">
     <ul class="menu">
-      <li v-if="!/\/.*?\/.*/.test(route.path)" v-for="route in this.$router.options.routes">
+      <!-- <li v-if="!/\/.*?\/.*/.test(route.path)" v-for="route in this.$router.options.routes">
         <nuxt-link :to="{ name: route.name }">{{ route.name.charAt(0).toUpperCase() + route.name.slice(1) }}</nuxt-link>
+      </li> -->
+      <li>
+        <nuxt-link to="/blog">Blog</nuxt-link>
       </li>
     </ul>
   </nav>
